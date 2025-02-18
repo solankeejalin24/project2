@@ -1,9 +1,17 @@
 from flask import Flask, render_template, request, redirect, url_for, send_file
 import os
 from werkzeug.utils import secure_filename
+import sqlite3
 
 app = Flask(__name__, template_folder='templates')
 
+conn = sqlite3.connect("userdata.db")
+c = conn.cursor()
+c.execute(''' CREATE TABLE IF NOT EXISTS usersdata(username TEXT, password TEXT, firstname TEXT,
+            lastname TEXT, email TEXT, address TEXT)''')
+
+conn.commit()
+conn.close()
 
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -75,4 +83,4 @@ def success_register():
     return render_template('success_register.html', username=username, firstname=firstname, lastname=lastname, email=email, word_count=word_count)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
